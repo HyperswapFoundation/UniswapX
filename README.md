@@ -104,3 +104,7 @@ Note that UniswapX handles fee-on-transfer tokens by transferring the amount spe
 ## Bug Bounty
 
 This repository is subject to the Uniswap Labs Bug Bounty program, per the terms defined [here](https://uniswap.org/bug-bounty).
+
+## Deployment:
+
+forge script script/DeployV2DutchOrderReactor.s.sol:DeployV2DutchOrderReactorContract  --fork-url hypercore --broadcast --legacy
