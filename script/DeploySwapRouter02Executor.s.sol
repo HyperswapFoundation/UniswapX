@@ -11,7 +11,7 @@ contract DeploySwapRouter02Executor is Script {
     function setUp() public {}
 
     function run() public returns (SwapRouter02Executor executor) {
-        uint256 privateKey = vm.envUint("FOUNDRY_PRIVATE_KEY");
+        uint256 privateKey = vm.envUint("PRIVATE_KEY");
         IReactor reactor = IReactor(vm.envAddress("FOUNDRY_SWAPROUTER02EXECUTOR_DEPLOY_REACTOR"));
         address whitelistedCaller = vm.envAddress("FOUNDRY_SWAPROUTER02EXECUTOR_DEPLOY_WHITELISTED_CALLER");
         address owner = vm.envAddress("FOUNDRY_SWAPROUTER02EXECUTOR_DEPLOY_OWNER");

@@ -107,4 +107,20 @@ This repository is subject to the Uniswap Labs Bug Bounty program, per the terms
 
 ## Deployment:
 
-forge script script/DeployV2DutchOrderReactor.s.sol:DeployV2DutchOrderReactorContract  --fork-url hypercore --broadcast --legacy
+
+Hyperliquid:
+
+forge script script/DeployDutch.s.sol:DeployDutch  --fork-url hypercore --broadcast --legacy
+
+  Dutch Reactor 0xB6B65A1C7F1AFf294AA7059e87F9E498e2b51f70
+  Quoter 0xf84e4C5Da759BF2B0F0E05C527b5cd0a5a6d2d5B
+
+forge script script/DeployDutchV2.s.sol:DeployDutchV2  --fork-url hypercore --broadcast --legacy
+
+  Owner 0x1681910dEDc43B7F7FEfBA9FbDB7357Bfd4694c8
+  Reactor 0xb0c27699f420ac4e1FA630D11B9341f302C45E7a
+
+
+forge script script/DeploySwapRouter02Executor.s.sol:DeploySwapRouter02Executor  --fork-url hypercore --broadcast --legacy
+
+  SwapRouter02Executor 0xBe6d02FD9335C2e1e33bBC174ad7ee36764C8EE7

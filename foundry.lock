@@ -1,0 +1,20 @@
+{
+  "lib/solarray": {
+    "rev": "a547630f9bf7837af9e6919d217672afe7abf7f1"
+  },
+  "lib/solmate": {
+    "rev": "89365b880c4f3c786bdd453d4b8e8fe410344a69"
+  },
+  "lib/calibur": {
+    "rev": "84a3981c3bf51e42ebcc0a6c327b432e05b89376"
+  },
+  "lib/permit2": {
+    "rev": "cc56ad0f3439c502c246fc5cfcc3db92bb8b7219"
+  },
+  "lib/forge-std": {
+    "rev": "6bce1540c7a5d1c40eec032a1ae16f0e01f82b92"
+  },
+  "lib/openzeppelin-contracts": {
+    "rev": "53bb34057ed97ea9b36d550f1c2c413ef5b6c6bb"
+  }
+}

@@ -17,8 +17,7 @@ struct DutchDeployment {
 
 contract DeployDutch is Script, DeployPermit2 {
     IPermit2 constant PERMIT2 = IPermit2(0x000000000022D473030F116dDEE9F6B43aC78BA3);
-    address constant UNI_TIMELOCK = 0x1a9C8182C09F50C8318d769245beA52c32BE35BC;
-
+    address ownerAddress = vm.envAddress("FOUNDRY_REACTOR_OWNER");
     function setUp() public {}
 
     function run() public returns (DutchDeployment memory deployment) {
@@ -27,7 +26,7 @@ contract DeployDutch is Script, DeployPermit2 {
             deployPermit2();
         }
 
-        DutchOrderReactor reactor = new DutchOrderReactor{salt: 0x00}(PERMIT2, UNI_TIMELOCK);
+        DutchOrderReactor reactor = new DutchOrderReactor{salt: 0x00}(PERMIT2, ownerAddress);
         console2.log("Reactor", address(reactor));
 
         OrderQuoter quoter = new OrderQuoter{salt: 0x00}();
