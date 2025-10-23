@@ -42,6 +42,10 @@ contract MultiFillerSwapRouter02Executor is IReactorCallback, Owned {
         _;
     }
 
+    function updateWhitelist(address wl, bool isAllowed) external onlyOwner {
+        whitelistedCallers[wl] = isAllowed;
+    }
+
     constructor(address[] memory _whitelistedCallers, IReactor _reactor, address _owner, ISwapRouter02 _swapRouter02)
         Owned(_owner)
     {
