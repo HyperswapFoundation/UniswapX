@@ -110,6 +110,9 @@ This repository is subject to the Uniswap Labs Bug Bounty program, per the terms
 
 Hyperliquid:
 
+forge script script/DeployFeeControllerInputFees.s.sol:DeployFeeControllerInputFees  --fork-url hypercore --broadcast --legacy
+    Fee controller 0x14702D5191594228e9d65C6B498be3376d323Ad2
+
 forge script script/DeployDutch.s.sol:DeployDutch  --fork-url hypercore --broadcast --legacy
 
   Dutch Reactor 0xB6B65A1C7F1AFf294AA7059e87F9E498e2b51f70

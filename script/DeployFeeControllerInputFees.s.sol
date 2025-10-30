@@ -11,9 +11,10 @@ contract DeployFeeControllerInputFees is Script {
 
     function run() public returns (address) {
         address owner = vm.envAddress("FOUNDRY_SWAPROUTER02EXECUTOR_DEPLOY_OWNER");
-        address feeReceiver = vm.envAddress("FOUNDRY_FEE_RECEIVER");
-        
-        vm.startBroadcast();
+        address feeReceiver = vm.envAddress("FOUNDRY_FEE_RECEIVER");        
+        uint256 pk = vm.envUint("PRIVATE_KEY");
+
+        vm.startBroadcast(pk);
 
         FeeControllerInputFees feeController = new FeeControllerInputFees{salt: 0x00}(owner, feeReceiver);
         console2.log("Fee controller", address(feeController));
