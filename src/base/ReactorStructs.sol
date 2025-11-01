@@ -49,6 +49,15 @@ struct ResolvedOrder {
     bytes32 hash;
 }
 
+struct PendingOrder {
+    address executor;          
+    address inputToken;
+    uint256 inputAmount;       
+    address swapper;
+    OutputToken[] outputs;
+    bool exists;
+}
+
 /// @dev external struct including a generic encoded order and swapper signature
 ///  The order bytes will be parsed and mapped to a ResolvedOrder in the concrete reactor contract
 struct SignedOrder {
