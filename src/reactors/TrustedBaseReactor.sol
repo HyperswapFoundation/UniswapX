@@ -10,13 +10,13 @@ import {ReactorEvents} from "../base/ReactorEvents.sol";
 import {ResolvedOrderLib} from "../lib/ResolvedOrderLib.sol";
 import {CurrencyLibrary} from "../lib/CurrencyLibrary.sol";
 import {IReactorCallback} from "../interfaces/IReactorCallback.sol";
-import {IReactor} from "../interfaces/IReactor.sol";
+import {ITrustedReactor} from "../interfaces/ITrustedReactor.sol";
 import {ProtocolFees} from "../base/ProtocolFees.sol";
 import {SignedOrder, ResolvedOrder, OutputToken, PendingOrder} from "../base/ReactorStructs.sol";
 
 /// @notice Generic reactor logic for settling off-chain signed orders
 ///     using arbitrary fill methods specified by a filler
-abstract contract TrustedBaseReactor is IReactor, ReactorEvents, ProtocolFees, ReentrancyGuard {
+abstract contract TrustedBaseReactor is ITrustedReactor, ReactorEvents, ProtocolFees, ReentrancyGuard {
     using SafeTransferLib for ERC20;
     using ResolvedOrderLib for ResolvedOrder;
     using CurrencyLibrary for address;
@@ -69,7 +69,7 @@ abstract contract TrustedBaseReactor is IReactor, ReactorEvents, ProtocolFees, R
         emit WhitelistUpdated(account, isWhitelisted);
     }
 
-    /// @inheritdoc IReactor
+    /// @inheritdoc ITrustedReactor
     function execute(SignedOrder calldata order) external payable override nonReentrant onlyWhitelistedCaller {
         ResolvedOrder[] memory resolvedOrders = new ResolvedOrder[](1);
         resolvedOrders[0] = _resolve(order);
@@ -78,7 +78,7 @@ abstract contract TrustedBaseReactor is IReactor, ReactorEvents, ProtocolFees, R
         _createPendingOrders(resolvedOrders);
     }
 
-    /// @inheritdoc IReactor
+    /// @inheritdoc ITrustedReactor
     function executeWithCallback(SignedOrder calldata order, bytes calldata callbackData)
         external
         payable
@@ -94,7 +94,7 @@ abstract contract TrustedBaseReactor is IReactor, ReactorEvents, ProtocolFees, R
         _createPendingOrders(resolvedOrders);
     }
 
-    /// @inheritdoc IReactor
+    /// @inheritdoc ITrustedReactor
     function executeBatch(SignedOrder[] calldata orders) external payable override nonReentrant onlyWhitelistedCaller {
         uint256 ordersLength = orders.length;
         ResolvedOrder[] memory resolvedOrders = new ResolvedOrder[](ordersLength);
@@ -109,7 +109,7 @@ abstract contract TrustedBaseReactor is IReactor, ReactorEvents, ProtocolFees, R
         _createPendingOrders(resolvedOrders);
     }
 
-    /// @inheritdoc IReactor
+    /// @inheritdoc ITrustedReactor
     function executeBatchWithCallback(SignedOrder[] calldata orders, bytes calldata callbackData)
         external
         payable

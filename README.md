@@ -127,3 +127,8 @@ forge script script/DeployDutchV2.s.sol:DeployDutchV2  --fork-url hypercore --br
 forge script script/DeploySwapRouter02Executor.s.sol:DeploySwapRouter02Executor  --fork-url hypercore --broadcast --legacy
 
   SwapRouter02Executor 0xBe6d02FD9335C2e1e33bBC174ad7ee36764C8EE7
+
+
+forge script script/DeployTrustedExclusiveDutch.s.sol:DeployTrustedExclusiveDutch  --fork-url hypercore --broadcast --legacy
+  
+  Reactor 0x164bfE3B20a8bb737209A555bfe7Ca872877DBbB
