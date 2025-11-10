@@ -69,7 +69,6 @@ abstract contract TrustedBaseReactor is ITrustedReactor, ReactorEvents, Protocol
         emit WhitelistUpdated(account, isWhitelisted);
     }
 
-    /// @inheritdoc ITrustedReactor
     function execute(SignedOrder calldata order) external payable override nonReentrant onlyWhitelistedCaller {
         ResolvedOrder[] memory resolvedOrders = new ResolvedOrder[](1);
         resolvedOrders[0] = _resolve(order);
@@ -78,7 +77,6 @@ abstract contract TrustedBaseReactor is ITrustedReactor, ReactorEvents, Protocol
         _createPendingOrders(resolvedOrders);
     }
 
-    /// @inheritdoc ITrustedReactor
     function executeWithCallback(SignedOrder calldata order, bytes calldata callbackData)
         external
         payable
@@ -94,7 +92,6 @@ abstract contract TrustedBaseReactor is ITrustedReactor, ReactorEvents, Protocol
         _createPendingOrders(resolvedOrders);
     }
 
-    /// @inheritdoc ITrustedReactor
     function executeBatch(SignedOrder[] calldata orders) external payable override nonReentrant onlyWhitelistedCaller {
         uint256 ordersLength = orders.length;
         ResolvedOrder[] memory resolvedOrders = new ResolvedOrder[](ordersLength);
@@ -109,7 +106,6 @@ abstract contract TrustedBaseReactor is ITrustedReactor, ReactorEvents, Protocol
         _createPendingOrders(resolvedOrders);
     }
 
-    /// @inheritdoc ITrustedReactor
     function executeBatchWithCallback(SignedOrder[] calldata orders, bytes calldata callbackData)
         external
         payable
@@ -131,36 +127,37 @@ abstract contract TrustedBaseReactor is ITrustedReactor, ReactorEvents, Protocol
         _createPendingOrders(resolvedOrders);
     }
 
-function settleOrder(bytes32 orderId, uint256 returnedInputAmount)
-    external
-    nonReentrant
-{
-    PendingOrder storage p = _pendingOrders[orderId];
-    if (!p.exists) revert OrderDoesNotExist();
-    bool isSettleInput = returnedInputAmount > 0; 
-    if (isSettleInput) {
+    function settleOrder(bytes32 orderId, uint256 returnedInputAmount, address apiWallet)
+        external
+        payable
+        nonReentrant
+    {
+        PendingOrder storage p = _pendingOrders[orderId];
+        if (!p.exists) revert OrderDoesNotExist();
+        bool isSettleInput = returnedInputAmount > 0; 
+        if (isSettleInput) {
 
-        uint256 minInputAfterSlippage = Math.mulDiv(p.inputAmount, (MAX_SLIPPAGE_BPS - slippageBps), MAX_SLIPPAGE_BPS);
-        // --- Mode 1: Executor returning input token ---
-        if (returnedInputAmount < minInputAfterSlippage) {
-            revert InsufficientAmount();
+            uint256 minInputAfterSlippage = Math.mulDiv(p.inputAmount, (MAX_SLIPPAGE_BPS - slippageBps), MAX_SLIPPAGE_BPS);
+            // --- Mode 1: Executor returning input token ---
+            if (returnedInputAmount < minInputAfterSlippage) {
+                revert InsufficientAmount();
+            }
+
+            // Transfer ERC20 input token back to the swapper
+            ERC20(p.inputToken).safeTransferFrom(apiWallet, p.swapper, returnedInputAmount);
+        } else {
+            // --- Mode 2: Executor fulfilling outputs ---
+            uint256 outputsLength = p.outputs.length;
+            for (uint256 j = 0; j < outputsLength; j++) {
+                OutputToken memory output = p.outputs[j];
+                output.token.transferFromFill(apiWallet, output.recipient, output.amount);
+            }
         }
 
-        // Transfer ERC20 input token back to the swapper
-        ERC20(p.inputToken).safeTransfer(p.swapper, returnedInputAmount);
-    } else {
-        // --- Mode 2: Executor fulfilling outputs ---
-        uint256 outputsLength = p.outputs.length;
-        for (uint256 j = 0; j < outputsLength; j++) {
-            OutputToken memory output = p.outputs[j];
-            output.token.transferFill(output.recipient, output.amount);
-        }
+        // Clear order and emit event
+        delete _pendingOrders[orderId];
+        emit OrderSettled(orderId, isSettleInput);
     }
-
-    // Clear order and emit event
-    delete _pendingOrders[orderId];
-    emit OrderSettled(orderId, isSettleInput);
-}
 
 
     /// @notice validates, injects fees, and transfers input tokens in preparation for order fill

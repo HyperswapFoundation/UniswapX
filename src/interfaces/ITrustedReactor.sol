@@ -8,5 +8,5 @@ import {IReactor} from "./IReactor.sol";
 interface ITrustedReactor is IReactor {
     function MAX_SLIPPAGE_BPS() external view returns (uint256);
     function slippageBps() external view returns (uint256);
-    function settleOrder(bytes32 orderId, uint256 returnedInputAmount) external;
+    function settleOrder(bytes32 orderId, uint256 returnedInputAmount, address apiWallet) payable external;
 }

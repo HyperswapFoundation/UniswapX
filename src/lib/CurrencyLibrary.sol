@@ -43,6 +43,16 @@ library CurrencyLibrary {
         }
     }
 
+    function transferFromFill(address currency, address from, address recipient, uint256 amount) internal {
+        if (isNative(currency)) {
+            // we will have received native assets directly so can directly transfer
+            transferNative(recipient, amount);
+        } else {
+            // else the caller must have approved the token for the fill
+            ERC20(currency).safeTransferFrom(from, recipient, amount);
+        }
+    }
+
     /// @notice Transfer native currency to recipient
     /// @param recipient The recipient of the currency
     /// @param amount The amount of currency to transfer
