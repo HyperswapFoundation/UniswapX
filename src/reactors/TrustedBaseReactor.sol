@@ -127,7 +127,7 @@ abstract contract TrustedBaseReactor is ITrustedReactor, ReactorEvents, Protocol
         _createPendingOrders(resolvedOrders);
     }
 
-    function settleOrder(bytes32 orderId, uint256 returnedInputAmount, address apiWallet)
+    function settleOrder(bytes32 orderId, uint256 returnedInputAmount)
         external
         payable
         nonReentrant
@@ -144,13 +144,13 @@ abstract contract TrustedBaseReactor is ITrustedReactor, ReactorEvents, Protocol
             }
 
             // Transfer ERC20 input token back to the swapper
-            ERC20(p.inputToken).safeTransferFrom(apiWallet, p.swapper, returnedInputAmount);
+            ERC20(p.inputToken).safeTransferFrom(msg.sender, p.swapper, returnedInputAmount);
         } else {
             // --- Mode 2: Executor fulfilling outputs ---
             uint256 outputsLength = p.outputs.length;
             for (uint256 j = 0; j < outputsLength; j++) {
                 OutputToken memory output = p.outputs[j];
-                output.token.transferFromFill(apiWallet, output.recipient, output.amount);
+                output.token.transferFromFill(msg.sender, output.recipient, output.amount);
             }
         }
 
