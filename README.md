@@ -131,4 +131,8 @@ forge script script/DeploySwapRouter02Executor.s.sol:DeploySwapRouter02Executor 
 
 forge script script/DeployTrustedExclusiveDutch.s.sol:DeployTrustedExclusiveDutch  --fork-url hypercore --broadcast --legacy
   
-  Reactor 0x164bfE3B20a8bb737209A555bfe7Ca872877DBbB
+  Reactor 0xA78FC86485BCF5C35fd4112d9BB922e05A8e3d41
+
+forge script script/DeployHypercoreRouterExecutor.s.sol:DeployHypercoreRouterExecutor  --fork-url hypercore --broadcast --legacy
+
+  HypercoreRouterExecutor 0xebd43e6AEfBb3D5a7411e3Cf0921e505d47f2840

@@ -11,11 +11,13 @@ struct ExclusiveDutchDeployment {
     IPermit2 permit2;
     TrustedExclusiveDutchOrderReactor reactor;
     OrderQuoter quoter;
+    address owner;
 }
 
 contract DeployTrustedExclusiveDutch is Script {
     address constant PERMIT2 = 0x000000000022D473030F116dDEE9F6B43aC78BA3;
-    address constant UNI_TIMELOCK = 0x1a9C8182C09F50C8318d769245beA52c32BE35BC;
+    address owner = vm.envAddress("FOUNDRY_SWAPROUTER02EXECUTOR_DEPLOY_OWNER");
+
 
     function setUp() public {}
 
@@ -23,14 +25,15 @@ contract DeployTrustedExclusiveDutch is Script {
         uint256 pk = vm.envUint("PRIVATE_KEY");
         vm.startBroadcast(pk);
 
-        TrustedExclusiveDutchOrderReactor reactor = new TrustedExclusiveDutchOrderReactor{salt: 0x00}(IPermit2(PERMIT2), UNI_TIMELOCK);
+        TrustedExclusiveDutchOrderReactor reactor = new TrustedExclusiveDutchOrderReactor(IPermit2(PERMIT2), owner);
         console2.log("Reactor", address(reactor));
 
-        OrderQuoter quoter = new OrderQuoter{salt: 0x00}();
+        OrderQuoter quoter = new OrderQuoter();
         console2.log("Quoter", address(quoter));
+        console2.log("OWNER", reactor.owner());
 
         vm.stopBroadcast();
 
-        return ExclusiveDutchDeployment(IPermit2(PERMIT2), reactor, quoter);
+        return ExclusiveDutchDeployment(IPermit2(PERMIT2), reactor, quoter, reactor.owner());
     }
 }
